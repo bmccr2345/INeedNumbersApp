@@ -1,34 +1,30 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import './SplashScreen.css';
 
 const SplashScreen: React.FC = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/login', { replace: true });
-    }, 1500); // 1.5 seconds
+      window.location.href = 'https://ineednumbers.com/auth/login';
+    }, 1500); // 1.5-second delay before redirect
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, []);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        backgroundColor: '#F5FEF9'
-      }}
-    >
-      <img
-        src="/resources/splash.png"
-        alt="I Need Numbers Fairy"
-        style={{ width: '220px', height: 'auto' }}
-      />
+    <div style={styles.container}>
+      <div className="spinner" />
     </div>
   );
+};
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: '#ffffff',
+  } as React.CSSProperties,
 };
 
 export default SplashScreen;

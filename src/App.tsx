@@ -74,7 +74,7 @@ const App: React.FC = () => {
         border: "none",
         margin: 0,
         padding: 0,
-        overflow: 0,
+        overflow: "hidden",
       }}
     />
   );
