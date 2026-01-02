@@ -1,84 +1,23 @@
-import React, { useEffect, useState } from "react";
-import "./theme/core.css";
-import "./theme/variables.css";
+// nano.app.tsx
+// This file runs before the router and forces the correct startup behavior on iOS.
 
-const App: React.FC = () => {
-  const [showSplash, setShowSplash] = useState(true);
+// Detect Capacitor native environment
+const isCapacitor =
+  typeof window !== "undefined" &&
+  !!(window as any).Capacitor?.isNativePlatform?.();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1500); // Splash duration
+// Force redirect to the login page ONCE per app launch
+if (isCapacitor) {
+  const alreadyRedirected = sessionStorage.getItem("mobile_redirect_once");
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (showSplash) {
-    return (
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#F5FEF9",
-        }}
-      >
-        {/* Fairy / Logo */}
-        <img
-          src="/resources/splash.png"  // update if name/path differs
-          alt="I Need Numbers Fairy"
-          style={{ width: "200px", height: "auto", marginBottom: "20px" }}
-        />
-
-        {/* Loading Spinner */}
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            border: "4px solid rgba(0, 0, 0, 0.1)",
-            borderTop: "4px solid #34C759", // brand color for spinner top
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-          }}
-        />
-
-        {/* Spinner animation */}
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
-      </div>
-    );
+  if (!alreadyRedirected) {
+    sessionStorage.setItem("mobile_redirect_once", "yes");
+    window.location.href = "/auth/login";
   }
+}
 
-  return (
-    <iframe
-      src="https://ineednumbers.com/auth/login"
-      title="INeedNumbers WebApp"
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        border: "none",
-        margin: 0,
-        padding: 0,
-        overflow: "hidden",
-      }}
-    />
-  );
-};
-
-export default App;
-
+// This component renders nothing.
+// It only exists so the redirect logic runs before the main app mounts.
+export default function NanoApp() {
+  return null;
+}
